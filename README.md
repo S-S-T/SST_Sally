@@ -50,6 +50,7 @@ _Note_: this is _not_ a sorted priority list.
     * Add smooth motion rendering as the robot moves
 * Port the code to Angular (or another framework)    
 * Port to Typescript
+* AVOID Global Vars (window.somethings)! Try to remove those from current updated version
 * Other enhancements?
 
 # NodeJS Development Crash Course
