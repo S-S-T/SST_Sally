@@ -1,71 +1,34 @@
 'use strict';
 
 export class CanvasView {
+
 	constructor() {
  		this.canvas = document.getElementById("c");
 		this.context = this.canvas.getContext("2d");
 	};
 	
-	// Load Large Grid 
-	chkboxProcessor(checkboxElem) {
-	  if (checkboxElem.checked) {			
-		this.processLargeSize();	
-	  } 
-	  else{
-	    // Unchecked = Original vars for SmallBoard
-		location.reload();
-	  }
-	}	
-	
-	// Add 2nd player
-	addPlayer2(addRobotsElem) {
-	  if (addRobotsElem) {	
-/* 		if(document.getElementById('chk3Robots').checked)
-		{
-		    document.getElementById('chk3Robots').checked = false;  
-		} */
-	}
-    	window.simulator.restart(); 
-	    this.processSize();
-	}
-	
-	// Add 3rd player
-	addPlayer3(addRobotsElem) {
-	  if (addRobotsElem) {	
-/* 		if(document.getElementById('chk2Robots').checked)
-		{
-		    document.getElementById('chk2Robots').checked = false;  
-		} */
-	}
-    	window.simulator.restart(); 
-	    this.processSize();
-	}	
-	
 	processLargeSize() {
 	    // LARGE GRID DIMENSIONS	
-		this.robot = window.robot;
-	   	this.chkbox = document.getElementById('chkbox').checked;	
 		this.canvas = document.getElementById("c");
 		this.context = this.canvas.getContext("2d");	
-   		this.maxX = 8; // x total
-		this.maxY = 8; // y total
-		this.squareSize = 100; // all grids are equal wd/ht
+   		this.maxX = 7; // x total
+		this.maxY = 7; // y total
+		this.squareSize = 100; // all grids are equal width and height
 		this.xStart = 50; // axis x starts from 50px
 		this.yStart = 50; // axis y starts from 50px
 		this.xEnd = this.xStart + this.squareSize * this.maxX; // axis x starts from 50px
 		this.yEnd = this.yStart + this.squareSize * this.maxY; // axis y starts from 50px
-		this.canvas.width = 859;
-		this.canvas.height = 879;		
+		this.canvas.width = 780;
+		this.canvas.height = 771;	
+		//var currentLargeRobot = window.simulator.getCurrentRobot();	
 		this.robotFacing = ['north', 'east', 'south', 'west']; // clockwise
 		this.robotSize = 25; // is the arrow size actually
-		this.renderRobot();
+		this.renderLargeRobot();
 	}
-	
 	processSize() {	
-	    // ORIGINAL DIMENSIONS	--- make sure we don't inherit Large dims and robot
-		this.robot = window.robot;
-		this.canvas = document.getElementById("c");
-		this.context = this.canvas.getContext("2d");		
+	    // ORIGINAL DIMENSIONS	
+/* 		this.canvas = document.getElementById("c");
+		this.context = this.canvas.getContext("2d"); */		
   	    this.maxX = 5; // x total
 		this.maxY = 5; // y total
 		this.squareSize = 100; // all grids are equal width and height
@@ -81,16 +44,14 @@ export class CanvasView {
 	}
 	
 	render() {
+		
 		this.context.beginPath();		
+/* 		this.canvas = document.getElementById("c");
+		this.context = this.canvas.getContext("2d"); */	
 		this.context.clearRect(0, 0, this.canvas.width, this.canvas.height); // TODO: Magic dimensions from index.ejs
 		this.renderCanvas();
-     	this.chkbox = document.getElementById('chkbox');	
-		if(document.getElementById("chkbox").checked)
-		{	
-			this.renderGoal(robot);
-		} 		
+		this.renderGoal(window.simulator.getCurrentRobot());
 		this.renderRobot();
-		this.renderGoal(robot)	
 	}
 
 	stepAi() {
@@ -131,16 +92,19 @@ export class CanvasView {
 		};
 	}
 
-	renderCanvas() {			
+	renderCanvas() {	
+/*  	this.canvas = document.getElementById("c");
+		this.context = this.canvas.getContext("2d"); */	
+    	this.chkbox = document.getElementById('chkbox');	
+		
+		if(document.getElementById("chkbox").checked)
+		{			
+			this.processLargeSize();
+		}
 		if(!document.getElementById("chkbox").checked)
 		{	
 			this.processSize();	
-		} 
-		if(document.getElementById("chkbox").checked)
-		{	
-			this.processLargeSize();	
-		}
- 		
+		}	
 		this.context.strokeStyle = "#000";
 
 		for (var x = 0; x < (this.maxX + 1); x++) { // draw 6 lines
@@ -181,28 +145,11 @@ export class CanvasView {
 		}
 	}
 
-	renderRobot() {	
-		// Single Robot
-		if((!document.getElementById("chk2Robots").checked) && (!document.getElementById("chk3Robots").checked))
-		{	
-			var robot = window.robot,
+	renderRobot() {
+		var robot = window.simulator.getCurrentRobot(),
 			robotAxisX = (robot.x + 1) * 100, // the center of the destination grid horizontally
 			robotAxisY = (this.maxY - robot.y) * 100; // the center of the destination grid vertically
-		} 
-		// Second Player
-		if(document.getElementById("chk2Robots").checked)
-		{	// Array of 'Bots
-			var robot = window.robot,
-			robotAxisX = (robot.x + 1) * 100, // the center of the destination grid horizontally
-			robotAxisY = (this.maxY - robot.y) * 100; // the center of the destination grid vertically					
-		}
-		// Third Player
-		if(document.getElementById("chk3Robots").checked)
-		{
-			var robot = window.robot,
-			robotAxisX = (robot.x + 1) * 100, // the center of the destination grid horizontally
-			robotAxisY = (this.maxY - robot.y) * 100; // the center of the destination grid vertically		
-		}	
+
 		var path = new Path2D();
 		switch (robot.f) {
 		case "north":
@@ -232,9 +179,48 @@ export class CanvasView {
 		this.context.fillStyle = robot.color;
 		this.context.stroke(path);
 		this.context.fill(path);
-		window.robot = robot; // set Window var to this array index		
 		window.reportView.renderReport();
 	}
+
+	renderLargeRobot() {
+		this.chkbox = document.getElementById('chkbox');	
+		if(document.getElementById("chkbox").checked)
+		{		
+			var robot = window.simulator.getCurrentLargeRobot(),
+			robotAxisX = (robot.x + 1) * 100, // the center of the destination grid horizontally
+			robotAxisY = (this.maxY - robot.y) * 100; // the center of the destination grid vertically
+		}
+		var path = new Path2D();
+		switch (robot.f) {
+		case "north":
+			path.moveTo(robotAxisX, robotAxisY - this.robotSize);
+			path.lineTo(robotAxisX - this.robotSize, robotAxisY);
+			path.lineTo(robotAxisX + this.robotSize, robotAxisY);
+			break;
+		case "south":
+			path.moveTo(robotAxisX, robotAxisY + this.robotSize);
+			path.lineTo(robotAxisX - this.robotSize, robotAxisY);
+			path.lineTo(robotAxisX + this.robotSize, robotAxisY);
+			break;
+		case "east":
+			path.moveTo(robotAxisX + this.robotSize, robotAxisY);
+			path.lineTo(robotAxisX, robotAxisY - this.robotSize);
+			path.lineTo(robotAxisX, robotAxisY + this.robotSize);
+			break;
+		case "west":
+			path.moveTo(robotAxisX - this.robotSize, robotAxisY);
+			path.lineTo(robotAxisX, robotAxisY - this.robotSize);
+			path.lineTo(robotAxisX, robotAxisY + this.robotSize);
+			break;
+		default:
+			break;
+		}
+		path.closePath();
+		this.context.fillStyle = robot.color;
+		this.context.stroke(path);
+		this.context.fill(path);
+		window.reportView.renderReport();
+	}	
 	
 	renderGoal(robot) {
 		var goal = window.goal;
@@ -247,10 +233,11 @@ export class CanvasView {
 		path.closePath();
 
 		if (this.atGoal(robot, goal)) {
-			context.fillStyle = "Green";  // When Sally reaches Goal!
+			context.fillStyle = "red";
 		}
+
 		context.stroke(path);
 		context.fill(path);
-		context.fillStyle = robot.color												;
+		context.fillStyle = "blue";
 	}
 }

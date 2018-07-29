@@ -7,11 +7,10 @@ export class ReportView {
 	}
 
 	renderReport() {
-		var currentRobot = window.robot;
+		var currentRobot = window.simulator.getCurrentRobot();
 		this.reportMessageEle.innerHTML = '<span>' + 'Axis X: ' + currentRobot.x + '</span>' +
 			'<span>' + 'Axis Y: ' + currentRobot.y + '</span>' +
-			'<span>' + 'Facing: ' + currentRobot.f + '</span>'+
-			'<span>' + 'Player Number: ' + window.currentPlayer + '</span>';
+			'<span>' + 'Facing: ' + currentRobot.f + '</span>';
 	}
 
 	renderErrors(msg) {

@@ -4,25 +4,26 @@ import {Behavior} from '../behavior';
 import {getRandomInt} from '../utils';
 
 let behavior = new Behavior();
-var player = "";
+
 export class Robot {
 
-	constructor() {	
+	constructor() {		
 		// if chkbox.checked use these params		
 		this.chkbox = document.getElementById('chkbox');	
 		if(document.getElementById("chkbox").checked)
 		{			
-			this.x = getRandomInt(0, 7); // 0-6 for the 7x7 canvas; this must be changed (#1)
-			this.y = getRandomInt(0, 7);
+		this.x = getRandomInt(0, 8); // 0-6 for the 7x7 canvas; this must be changed (#1)
+		this.y = getRandomInt(0, 8);
 		}
 		if(!document.getElementById("chkbox").checked)
-		{// if chkbox.unchecked use these params
-			this.x = getRandomInt(0, 4); // 0-4 for the 5x5 canvas; this must be changed (#1)
-			this.y = getRandomInt(0, 4);
-		}					
-		// this.color = 'blue';
+		{	
+		// if chkbox.unchecked use these params
+		this.x = getRandomInt(0, 4); // 0-4 for the 5x5 canvas; this must be changed (#1)
+		this.y = getRandomInt(0, 4);
+		}
+							
+		this.color = 'blue';
 		this.f = ['north', 'east', 'south', 'west'][getRandomInt(0, 3)];  // 0-3 for 4 directions
-		this.player = window.currentPlayer;
 		console.log(`Robot positioned at ${this.x}, ${this.y}, ${this.f}`);
 	}
 
