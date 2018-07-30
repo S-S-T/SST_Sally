@@ -1,29 +1,17 @@
 'use strict';
-import {Behavior} from '../behavior'; // behavior.js file includes an extension from Blueshell
+
+import {Behavior} from '../behavior';
 import {getRandomInt} from '../utils';
+
 let behavior = new Behavior();
-var player = "";
 
 export class Robot {
 
-	constructor() {	
-		// Clear any error msg before reloading game
-		window.reportView.clear();
-		// Condition for Large or Normal Grid
-		this.chkbox = document.getElementById('chkbox');	
-		if(document.getElementById("chkbox").checked)
-		{			
-			this.x = getRandomInt(0, 7); // 0-7 for the 7x7 canvas; this must be changed (#1)
-			this.y = getRandomInt(0, 7);
-		}
-		if(!document.getElementById("chkbox").checked)
-		{// if chkbox.unchecked use these params
-			this.x = getRandomInt(0, 4); // 0-4 for the 5x5 canvas; this must be changed (#1)
-			this.y = getRandomInt(0, 4);
-		}					
-		// this.color = 'blue';
-		this.f = ['north', 'east', 'south', 'west'][getRandomInt(0, 3)];  // 0-3 for 4 directions
-		this.player = window.currentPlayer;
+	constructor() {
+		this.x = getRandomInt(0, 4);
+		this.y = getRandomInt(0, 4);
+		this.color = 'black';
+		this.f = ['north', 'east', 'south', 'west'][getRandomInt(0, 3)];
 		console.log(`Robot positioned at ${this.x}, ${this.y}, ${this.f}`);
 	}
 
@@ -31,11 +19,9 @@ export class Robot {
 		behavior.handleEvent(this, event);
 	}
 
-	
 	/* --------------------------------------------------- */
 	/*         the following are command functions
-	/* --------------------------------------------------- */
-	
+	 /* --------------------------------------------------- */
 	place(cmd) {
 		var newPos = cmd.split(","); // get x y f from the command
 		if (newPos.length < 3) {
@@ -56,6 +42,7 @@ export class Robot {
 	}
 
 	move() {
+
 		switch (this.f) {
 		case "north": {
 			let newY = this.y + 1;
@@ -88,8 +75,9 @@ export class Robot {
 		default:
 			break;
 		}
+
+
 	}
-	
 	left() {
 		this.rotate(false); // get the next from this.robotFacing array in anti-clockwise direction
 	}
@@ -98,7 +86,7 @@ export class Robot {
 		this.rotate(true); // get the next from this.robotFacing array in clockwise direction
 	}
 
-	rotate(clockwise) {   // e.g. of on-the-fly boolean variable declaration. Just use a word, then apply "true" or "false" in the parameter of the rotate function
+	rotate(clockwise) {
 		var originalFacing = this.f,
 			originalFacingIndex = window.canvasView.robotFacing.indexOf(originalFacing),
 			newFacingIndex,
@@ -117,6 +105,9 @@ export class Robot {
 				newFacingIndex = originalFacingIndex - 1;
 			}
 		}
+
 		this.f = window.canvasView.robotFacing[newFacingIndex];
+
 	}
+
 }

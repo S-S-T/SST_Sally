@@ -36,7 +36,6 @@
     "webpack-dev-server": "^3.1.4"
   },
   "dependencies": {
-    "behavior-promise": "^1.0.59",
     "blueshell": "^1.1.0",
     "mainloop.js": "^1.0.4"
   }

@@ -1,78 +1,28 @@
 'use strict';
 
 export class CanvasView {
+
 	constructor() {
- 		this.canvas = document.getElementById("c");
-		this.context = this.canvas.getContext("2d");
-	};
-	// Load Large Grid 
-	chkboxProcessor(checkboxElem) {
-	  if (checkboxElem.checked) {			
-		this.processLargeSize();	
-	  } 
-	  else{
-	    // Unchecked = Original vars for SmallBoard
-		location.reload();
-	  }
-	}
-	// Add players 1, 2, or 3
-	addPlayers(addRobotsElem) {
-	  if (addRobotsElem) {	
-	}
-    	window.simulator.restart(); 
-	    this.processSize();
-	}		
-	
-	processLargeSize() {
-	    // LARGE GRID DIMENSIONS	
-		this.robot = window.robot;
-	   	this.chkbox = document.getElementById('chkbox').checked;	
-		this.canvas = document.getElementById("c");
-		this.context = this.canvas.getContext("2d");	
-   		this.maxX = 8; // x total
-		this.maxY = 8; // y total
-		this.squareSize = 100; // all grids are equal wd/ht
-		this.xStart = 50; // axis x starts from 50px
-		this.yStart = 50; // axis y starts from 50px
-		this.xEnd = this.xStart + this.squareSize * this.maxX; // axis x starts from 50px
-		this.yEnd = this.yStart + this.squareSize * this.maxY; // axis y starts from 50px
-		this.canvas.width = 859;
-		this.canvas.height = 879;		
-		this.robotFacing = ['north', 'east', 'south', 'west']; // clockwise
-		this.robotSize = 25; // is the arrow size actually
-		this.renderRobot();
-	}
-	
-	processSize() {	
-	    // ORIGINAL DIMENSIONS
-		this.robot = window.robot;
-		this.canvas = document.getElementById("c");
-		this.context = this.canvas.getContext("2d");		
-  	    this.maxX = 5; // x total
+		this.maxX = 5; // x total
 		this.maxY = 5; // y total
 		this.squareSize = 100; // all grids are equal width and height
 		this.xStart = 50; // axis x starts from 50px
 		this.yStart = 50; // axis y starts from 50px
 		this.xEnd = this.xStart + this.squareSize * this.maxX; // axis x starts from 50px
-		this.yEnd = this.yStart + this.squareSize * this.maxY; // axis y starts from 50px	
-		this.canvas.width = 555;
-		this.canvas.height = 580;	
+		this.yEnd = this.yStart + this.squareSize * this.maxY; // axis y starts from 50px
+		this.canvas = document.getElementById("c");
+		this.context = this.canvas.getContext("2d");
+
 		this.robotFacing = ['north', 'east', 'south', 'west']; // clockwise
-		this.robotSize = 25; // arrow size */	
-		this.renderRobot();		
+		this.robotSize = 25; // is the arrow size actually
 	}
-	
+
 	render() {
-		this.context.beginPath();		
-		this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+		this.context.clearRect(0, 0, 551, 580); // TODO: Magic dimensions from index.ejs
 		this.renderCanvas();
-     	this.chkbox = document.getElementById('chkbox');	
-		if(document.getElementById("chkbox").checked)
-		{	
-			this.renderGoal(robot);
-		} 		
+		this.renderGoal(window.simulator.getCurrentRobot());
 		this.renderRobot();
-		this.renderGoal(robot)	
+
 	}
 
 	stepAi() {
@@ -102,6 +52,7 @@ export class CanvasView {
 			console.log(`Invalid orientation ${robot.f}`);
 			return false;
 		}
+
 	}
 
 	buildEvent(robot, goal) {
@@ -113,22 +64,14 @@ export class CanvasView {
 		};
 	}
 
-	renderCanvas() {			
-		if(!document.getElementById("chkbox").checked)
-		{	
-			this.processSize();	
-		} 
-		else
-		{	
-			this.processLargeSize();	
-		}
- 		
+	renderCanvas() {
 		this.context.strokeStyle = "#000";
 
 		for (var x = 0; x < (this.maxX + 1); x++) { // draw 6 lines
 			var currentAxisX = this.xStart + x * this.squareSize;
 			this.context.moveTo(currentAxisX, this.yStart);
 			this.context.lineTo(currentAxisX, this.yEnd);
+
 			this.context.strokeText(x, currentAxisX + 50, this.yEnd + 20); // mark x index
 		}
 
@@ -136,6 +79,7 @@ export class CanvasView {
 			var currentAxisY = this.yStart + y * this.squareSize;
 			this.context.moveTo(this.xStart, currentAxisY);
 			this.context.lineTo(this.xEnd, currentAxisY);
+
 			this.context.strokeText((this.maxY - 1 - y), this.xStart - 20, currentAxisY + 50); // mark y index
 		}
 
@@ -146,9 +90,9 @@ export class CanvasView {
 		if (isNaN(input)) {
 			window.simulator.printErrors("Please enter a numeric coordinates!");
 			return false;
-		} else if (input < 0 || input > (this[toCheckAxis] - 1)) { // verify bounderies of 'bot move
+		} else if (input < 0 || input > (this[toCheckAxis] - 1)) {
 			window.simulator.printErrors("Coordinates out of range!");
-			return false;			
+			return false;
 		} else {
 			return true;
 		}
@@ -163,28 +107,11 @@ export class CanvasView {
 		}
 	}
 
-	renderRobot() {	
-		// Single Robot
-		if((!document.getElementById("chk2Robots").checked) && (!document.getElementById("chk3Robots").checked))
-		{	
-			var robot = window.robot,
+	renderRobot() {
+		var robot = window.simulator.getCurrentRobot(),
 			robotAxisX = (robot.x + 1) * 100, // the center of the destination grid horizontally
 			robotAxisY = (this.maxY - robot.y) * 100; // the center of the destination grid vertically
-		} 
-		// Second Player
-		if(document.getElementById("chk2Robots").checked)
-		{	// Array of 'Bots
-			var robot = window.robot,
-			robotAxisX = (robot.x + 1) * 100, // the center of the destination grid horizontally
-			robotAxisY = (this.maxY - robot.y) * 100; // the center of the destination grid vertically					
-		}
-		// Third Player
-		if(document.getElementById("chk3Robots").checked)
-		{
-			var robot = window.robot,
-			robotAxisX = (robot.x + 1) * 100, // the center of the destination grid horizontally
-			robotAxisY = (this.maxY - robot.y) * 100; // the center of the destination grid vertically		
-		}	
+
 		var path = new Path2D();
 		switch (robot.f) {
 		case "north":
@@ -210,31 +137,36 @@ export class CanvasView {
 		default:
 			break;
 		}
+
 		path.closePath();
+
 		this.context.fillStyle = robot.color;
 		this.context.stroke(path);
 		this.context.fill(path);
-		window.robot = robot; // set Window var to this array index		
+
 		window.reportView.renderReport();
 	}
-	
+
 	renderGoal(robot) {
 		var goal = window.goal;
+
 		var centerX = (goal.x + 1) * 100;
 		var centerY = (this.maxY - goal.y) * 100;
 		var radius = 35;
+
 		var context = this.context;
+
 		var path = new Path2D();
 		path.arc(centerX, centerY, radius, 0, 2 * Math.PI, false);
 		path.closePath();
 
 		if (this.atGoal(robot, goal)) {
-			context.fillStyle = "Yellow";  // Sally reached Goal!
-			window.reportView.renderErrors("(= GOOOOOOALLLLL !!!! =)");				
-			// console.log(`Hoorayyy, a Goal!!--positioned at ${goal.x}, ${this.maxY} ... GAME OVER...`);		
+			context.fillStyle = "blue";
 		}
+
 		context.stroke(path);
 		context.fill(path);
-		context.fillStyle = "Yellow"; //robot.color;
+
+		context.fillStyle = "black";
 	}
 }

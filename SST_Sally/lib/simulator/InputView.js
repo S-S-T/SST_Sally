@@ -2,33 +2,34 @@
 
 const commands = {
 	'move': () => {
-		window.robot.move();
+		window.simulator.getCurrentRobot().move();
 	},
 	'left': () => {
-		window.robot.left();
+		window.simulator.getCurrentRobot().left();
 	},
 	'right': () => {
-		window.robot.right();
+		window.simulator.getCurrentRobot().right();
 	},
 	'place': (params) => {
-		window.robot.place(params);
+		window.simulator.getCurrentRobot().place(params);
 	},
 	'stepai': () => {
-		window.robot.stepAi();
+		window.canvasView.stepAi();
 	},
 	'restart': () => {
-		window.simulator.restart();  
+		window.simulator.restart();
 	}
 };
-
 
 export class InputView {
 	constructor() {
 		this.commandBox = document.getElementById('command');
+
 	};
 
 	processCommand(value) {
 		this.commandBox.select(); // auto select all input for easier editing
+
 		window.simulator.resetContents(); // remove previous status and errors
 
 		const sanitizedValue = value.trim().toLocaleLowerCase(),
