@@ -5,6 +5,7 @@ export class CanvasView {
  		this.canvas = document.getElementById("c");
 		this.context = this.canvas.getContext("2d");
 	};
+	
 	// Load Large Grid 
 	chkboxProcessor(checkboxElem) {
 	  if (checkboxElem.checked) {			
@@ -14,14 +15,31 @@ export class CanvasView {
 	    // Unchecked = Original vars for SmallBoard
 		location.reload();
 	  }
-	}
-	// Add players 1, 2, or 3
-	addPlayers(addRobotsElem) {
+	}	
+	
+	// Add 2nd player
+	addPlayer2(addRobotsElem) {
 	  if (addRobotsElem) {	
+/* 		if(document.getElementById('chk3Robots').checked)
+		{
+		    document.getElementById('chk3Robots').checked = false;  
+		} */
 	}
     	window.simulator.restart(); 
 	    this.processSize();
-	}		
+	}
+	
+	// Add 3rd player
+	addPlayer3(addRobotsElem) {
+	  if (addRobotsElem) {	
+/* 		if(document.getElementById('chk2Robots').checked)
+		{
+		    document.getElementById('chk2Robots').checked = false;  
+		} */
+	}
+    	window.simulator.restart(); 
+	    this.processSize();
+	}	
 	
 	processLargeSize() {
 	    // LARGE GRID DIMENSIONS	
@@ -44,7 +62,7 @@ export class CanvasView {
 	}
 	
 	processSize() {	
-	    // ORIGINAL DIMENSIONS
+	    // ORIGINAL DIMENSIONS	--- make sure we don't inherit Large dims and robot
 		this.robot = window.robot;
 		this.canvas = document.getElementById("c");
 		this.context = this.canvas.getContext("2d");		
@@ -58,13 +76,13 @@ export class CanvasView {
 		this.canvas.width = 555;
 		this.canvas.height = 580;	
 		this.robotFacing = ['north', 'east', 'south', 'west']; // clockwise
-		this.robotSize = 25; // arrow size */	
+		this.robotSize = 25; // is the arrow size actually */	
 		this.renderRobot();		
 	}
 	
 	render() {
 		this.context.beginPath();		
-		this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+		this.context.clearRect(0, 0, this.canvas.width, this.canvas.height); // TODO: Magic dimensions from index.ejs
 		this.renderCanvas();
      	this.chkbox = document.getElementById('chkbox');	
 		if(document.getElementById("chkbox").checked)
@@ -75,9 +93,8 @@ export class CanvasView {
 		this.renderGoal(robot)	
 	}
 
-	stepAi() { // A.I. contact, this is 
-		// var robot = window.simulator.getCurrentRobot();
-		var robot = window.robot;	// already have this taken care of.
+	stepAi() {
+		var robot = window.simulator.getCurrentRobot();
 		robot.step(this.buildEvent(robot, window.goal));
 	}
 
@@ -119,7 +136,7 @@ export class CanvasView {
 		{	
 			this.processSize();	
 		} 
-		else
+		if(document.getElementById("chkbox").checked)
 		{	
 			this.processLargeSize();	
 		}
@@ -147,9 +164,9 @@ export class CanvasView {
 		if (isNaN(input)) {
 			window.simulator.printErrors("Please enter a numeric coordinates!");
 			return false;
-		} else if (input < 0 || input > (this[toCheckAxis] - 1)) { // verify bounderies of 'bot move
+		} else if (input < 0 || input > (this[toCheckAxis] - 1)) {
 			window.simulator.printErrors("Coordinates out of range!");
-			return false;			
+			return false;
 		} else {
 			return true;
 		}
@@ -227,16 +244,13 @@ export class CanvasView {
 		var context = this.context;
 		var path = new Path2D();
 		path.arc(centerX, centerY, radius, 0, 2 * Math.PI, false);
-        // path.arc(centerX, centerY, radius, 0, -3 * Math.PI / 2,false);		
 		path.closePath();
 
 		if (this.atGoal(robot, goal)) {
-			context.fillStyle = "Yellow";  // Sally reached Goal!
-			window.reportView.renderErrors("(= GOOOOOOALLLLL !!!! =)");				
-			// console.log(`Hoorayyy, a Goal!!--positioned at ${goal.x}, ${this.maxY} ... GAME OVER...`);		
+			context.fillStyle = "Green";  // When Sally reaches Goal!
 		}
 		context.stroke(path);
 		context.fill(path);
-		context.fillStyle = "Yellow"; //robot.color;
+		context.fillStyle = robot.color												;
 	}
 }

@@ -10,16 +10,10 @@ label {
 #report {
 	height: 20px;
 	color: #0892d0;
-	float: center;
-}
-#error {
-	height: 20px;
-	color: #FF0000;
-	float: center;
 }
 #report span {
 	padding-right: 10px;
 }
 #report #error {
-	/*color: #FF0000;*/
+	color: #FF0000;
 }

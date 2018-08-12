@@ -4,7 +4,7 @@
 	<meta charset="utf-8">
 	<meta name="viewport"
 				content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
-	     <!-- This policy allows everything (eg CSS, AJAX, object, frame, media, etc) except that
+	<!-- This policy allows everything (eg CSS, AJAX, object, frame, media, etc) except that
           * CSS only from the same origin and inline styles,
           * scripts only from the same origin and inline styles, and eval()
           -->
@@ -29,34 +29,27 @@
 			<dt>LEFT==Turn the robot 90 degrees to the left</dt>
 			<dt>RIGHT--Turn the robot 90 degrees to the right</dt>
 			<dt>STEPAI--Step the Behavior Tree once</dt>
-			<dt>ENLARGE--Command text to enlarge the grid size</dt>
-			<dt>NEXTPUR/NEXTRED/NEXTGRN--Force a new player after a goal, and begin new game</dt>
 			<dt>PLACE X,Y,F - where F is one of ['north', 'south', 'east', west']--'Warp' the robot to a new position and orientation. This is 'cheating', but useful for debugging.</dt>
 		</dl>
 		</p>
 		<main>
 			<div class="input-area">
-				<label for="chk1Robots">Player 1:</label>
-	 			<input type="radio" id="chk1Robots" name="players" class="radio" checked="checked" onclick="if(this.checked) 
-				canvasView.addPlayers(this);" />		
-				<label for="chk2Robots">Player 2:</label>
-	 			<input type="radio" id="chk2Robots" name="players" class="radio" onclick="if(this.checked) 
-				canvasView.addPlayers(this);" />			
-				<label for="chk3Robots">Player 3:</label>
-	 			<input type="radio" id="chk3Robots" name="players" class="radio" onclick="if(this.checked) 
-				canvasView.addPlayers(this);" />					
+				<label for="checkbox">Player 2:</label>
+	 			<input type="checkbox" id="chk2Robots" onclick="if(this.checked) 
+				canvasView.addPlayer2(this);" />			
+				<label for="checkbox">Player 3:</label>
+	 			<input type="checkbox" id="chk3Robots" onclick="if(this.checked) 
+				canvasView.addPlayer3(this);" />					
 				<label for="checkbox">Increase Grid Size to 8 x 8:</label>
 	 			<input type="checkbox" id="chkbox" onchange="canvasView.chkboxProcessor(this);" />				
+<!-- 			<input type="checkbox" id="chkbox" onclick="if(chkbox.selected) new robot.constructor();" /> -->	
+<!-- 	 		<input type="checkbox" id="chkbox" onclick="if (this.checked) 
+				canvasView.processLargeSize();" autofocus /> -->
 				<label for="command">Enter Command:</label>
 				<input type="text" id="command" on onkeydown="if (event.keyCode == 13) inputView.processCommand(this.value);" autofocus>
 			</div>
 			<div class="content">
-				<h4>Current Status:</h4>
-					<div style="overflow: hidden;">
-						<p id="report"></p>
-						<p id="error"></p>
-					</div>
-<!-- 				<p><label name="lblGO" id="lblGameOver" text="GAME OVER!" /></p> -->
+				<h4>Current Status:</h4><p id="report"></p>
 			</div>
 			<canvas id="c" width="555" height="580"></canvas>
 		</main>

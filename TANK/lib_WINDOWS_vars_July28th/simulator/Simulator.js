@@ -7,10 +7,10 @@ import {InputView} from './InputView';
 import {ReportView} from './ReportView';
 import {CanvasView} from './CanvasView';
 
-let robots = [];
-let botColors = [];
-let botIndex = 0;
-let currentPlayer = 1;
+var robots = new Array();
+var botColors = new Array();
+var botIndex = 0;
+var currentPlayer = 1;
 
 export class Simulator {
 	constructor() {
@@ -37,6 +37,10 @@ export class Simulator {
 	getCurrentRobot() {
 		return window.robot;
 	}
+	
+    getNewRobot() {
+		window.robot = new Robot();	
+	}	
 
 	resetContents() {
 		window.reportView.clear();
@@ -48,8 +52,7 @@ export class Simulator {
 	printErrors(msg) {
 		window.reportView.renderErrors(msg);
 	}
-	
-	restart() {		
+	restart() {
 		window.botIndex = 0;
 		this.currentPlayer = 1;
 		if(document.getElementById("chk2Robots").checked)
@@ -62,8 +65,9 @@ export class Simulator {
 			window.botIndex = 2;
 			this.currentPlayer = 3;	
 		}
-		// Run arrays for 'bots/colors
-		botColors = ['purple', 'green', 'red', 'blue', 'black'];			
+		// Rerun arrays for 'bots/colors
+		botColors = ['purple', 'green', 'red', 'blue', 'black'];
+	    // Create arrays[] robots and colors			
 		for (var i=0; i<3; i++) {
 			robots[i] = new Robot();				
 		}
@@ -71,6 +75,7 @@ export class Simulator {
 			robots[i].color = botColors[i];			
 		}
 		window.robot = robots[window.botIndex];	
+		// window.robot = new Robot();
 		window.goal = new Goal();	
 		window.currentPlayer = this.currentPlayer;
 	}

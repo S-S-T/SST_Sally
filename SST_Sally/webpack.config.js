@@ -19,7 +19,6 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 module.exports = {
 	entry: path.join(libPath, 'index.js'),
 	devtool: 'source-map',
-	mode: 'development',
 	output: {
 		path: wwwPath,
 		filename: 'simulator-[hash:6].js',
